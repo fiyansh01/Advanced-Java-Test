@@ -1,0 +1,46 @@
+//1. Second highest distinct salary
+SELECT MAX(Salary) AS Second_Highest_Salary
+FROM Employee
+WHERE Salary < (SELECT MAX(Salary) FROM Employee);
+
+// 2. Highest salary in each department
+SELECT Department, MAX(Salary) AS Highest_Salary
+FROM Employee
+GROUP BY Department;
+
+//3. Employee earning more than their Department's Average Salary
+Select e.ID, e.Name, e.Department, e.Salary
+FROM Employee e
+WHERE e.Salary > (
+SELECT AVG(e2.Salary)
+FROM Employee e2
+WHERE e2.Department = e.Department
+);
+
+//4. Departments having more then one employee
+SELECT Department, COUNT(*) AS Employee_Count
+FROM Employee
+GROUP BY Department
+HAVING COUNT(*) > 1;
+
+// 5. Employees Having duplicate salaries
+SELECT ID, Name, Department, Salary
+FROM Employee 
+WHERE Salary IN(
+SELECT Salary
+FROM Employee
+GROUP BY Salary
+HAVING COUNT(*) > 1
+)
+ORDER BY Salary, ID;
+
+// 6. THIRD HIGHEST DISTINCT SALARY
+SELECT DISTINCT Salary AS Third_Highest_Salary
+FROM Employee
+ORDER BY Salary DESC
+LIMIT 1 OFFSET 2;
+
+// 7. Employees receiving the maximum salary in the company
+SELECT ID, Name, Department, Salary
+FROM Employee
+WHERE Salary = (SELECT MAX(Salary) FROM Employee);
